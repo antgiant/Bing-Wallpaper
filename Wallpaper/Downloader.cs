@@ -73,6 +73,18 @@ namespace Wallpaper
         {
             try
             {
+                string tempurl = new Uri(url).LocalPath;
+                //Only download allowed image file types
+                if (Path.GetExtension(tempurl).ToLower() == "bmp"
+                    || Path.GetExtension(tempurl).ToLower() == "gif"
+                    || Path.GetExtension(tempurl).ToLower() == "jpg"
+                    || Path.GetExtension(tempurl).ToLower() == "png"
+                    || Path.GetExtension(tempurl).ToLower() == "tif"
+                    || Path.GetExtension(tempurl).ToLower() == "jpeg"
+                    || Path.GetExtension(tempurl).ToLower() == "tiff")
+                {
+                    Environment.Exit(0);
+                }
                 string localFile = Path.Combine(folder, Path.GetFileName(new Uri(url).LocalPath));
 
                 var client = new WebClientEx(10 * 1000);

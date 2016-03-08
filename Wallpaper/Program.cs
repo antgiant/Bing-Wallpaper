@@ -8,27 +8,113 @@ namespace Wallpaper
     {
         private static void Main(string[] args)
         {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\Wallpapers";
+            string file = "";
+            uint monitor = uint.MaxValue;
 
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            var bd =
-                new Downloader(path)
+            //Only evaluate 1 or two arguments
+            if (args.Length >= 1 && args.Length <= 2)
+            {
+                for (int i = 0; i < args.Length; i++)
                 {
-                    UseHttps = true,
-                    Size =
-                        new Rect
+                    //If argument is a number set wallpaper on only that monitor (Assumes less than 10,000 monitors.)
+                    if (args[i].Length < 5)
+                    {
+                        try
                         {
-                            Right = Screen.PrimaryScreen.Bounds.Width,
-                            Bottom = Screen.PrimaryScreen.Bounds.Height
-                        }
-                };
+                            //Subtract one so that passed in monitor number equals what windows displays
+                            monitor = Convert.ToUInt32(args[i]) - 1;
 
-            string file = bd.DownloadSync();
+                            //If specified monitor number is greater than the current number of monitors do nothing and exit.
+                            var wallpaper = (IDesktopWallpaper)(new DesktopWallpaperClass());
+                            if (wallpaper.GetMonitorDevicePathCount() < monitor)
+                            {
+                                Environment.Exit(0);
+                            }
+                        }
+                        catch
+                        {
+                            //If monitor number is invalid do nothing and exit.
+                            Environment.Exit(0);
+                        }
+                    }
+                    //If argument is a URL download and set wallpaper to that. (Only use trusted URLs as this will download anything.)
+                    else if (args[i].Substring(0, 4).ToLower() == "http")
+                    {
+                        string path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\Wallpapers";
+
+                        if (!Directory.Exists(path))
+                            Directory.CreateDirectory(path);
+
+                        var bd =
+                            new Downloader(path)
+                            {
+                                UseHttps = true,
+                                Size =
+                                    new Rect
+                                    {
+                                        Right = Screen.PrimaryScreen.Bounds.Width,
+                                        Bottom = Screen.PrimaryScreen.Bounds.Height
+                                    }
+                            };
+
+                        file = bd.DownloadSync(args[i]);
+
+                        //If specified URL cannot be downloaded do nothing and exit.
+                        if (file == string.Empty)
+                        {
+                            Environment.Exit(0);
+                        }
+                    }
+                    //Assume argument was a wallpaper image
+                    else
+                    {
+                        //If specified file does not exist do nothing and exit.
+                        if (File.Exists(args[i]))
+                        {
+                            file = args[i];
+                        }
+                        else
+                        {
+                            Environment.Exit(0);
+                        }
+                    }
+                }
+            }
+
+            //Default to Bing Wallpaper
+            if (file == "")
+            {
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\Wallpapers";
+
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                var bd =
+                    new Downloader(path)
+                    {
+                        UseHttps = true,
+                        Size =
+                            new Rect
+                            {
+                                Right = Screen.PrimaryScreen.Bounds.Width,
+                                Bottom = Screen.PrimaryScreen.Bounds.Height
+                            }
+                    };
+
+                file = bd.DownloadSync();
+            }
 
             if (!string.IsNullOrEmpty(file))
-                SetAsWallPaper(file);
+            {
+                if (monitor == uint.MaxValue)
+                {
+                    SetAsWallPaper(file);
+                }
+                else
+                {
+                    SetAsWallPaper(file, monitor);
+                }
+            }
         }
 
         private static void SetAsWallPaper(string file)
