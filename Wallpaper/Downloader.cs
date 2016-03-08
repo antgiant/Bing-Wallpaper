@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 
-namespace BingWallpaper
+namespace Wallpaper
 {
-    public class BingDownloader
+    public class Downloader
     {
-        public BingDownloader(string folder)
+        public Downloader(string folder)
         {
             DownloadFolder = folder;
 
@@ -51,6 +51,17 @@ namespace BingWallpaper
                                                      UseHttps ? "https" : "http",
                                                      baseUrl,
                                                      GetBestSize(Size)));
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+        public string DownloadSync(string url)
+        {
+            try
+            {
+                return ProcessDownload(DownloadFolder, url);
             }
             catch (Exception)
             {

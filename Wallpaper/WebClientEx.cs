@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace BingWallpaper
+namespace Wallpaper
 {
     public class WebClientEx : WebClient
     {

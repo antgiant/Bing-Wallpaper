@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace BingWallpaper
+namespace Wallpaper
 {
     /// <summary>
     ///     This enumeration is used to set and get slideshow options.

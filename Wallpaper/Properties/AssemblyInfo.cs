@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Bing Wallpaper Downloader")]
-[assembly: AssemblyDescription("Bing Wallpaper Downloader")]
+[assembly: AssemblyTitle("Multi Monitor Wallpaper Changer")]
+[assembly: AssemblyDescription("A modified copy of Bing Wallpaper Downloader by Paddy Xu")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Paddy Xu")]
-[assembly: AssemblyProduct("BingWallpaper")]
-[assembly: AssemblyCopyright("Copyright © Paddy Xu 2014")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Wallpaper Changer")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

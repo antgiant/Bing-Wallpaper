@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace BingWallpaper
+namespace Wallpaper
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Rect
