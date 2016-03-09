@@ -16,4 +16,8 @@ Usage
   * Note: URL must end with an extension of a supported wallpaper format (i.e. bmp, gif, jpg, png, tiff)
  * Folder (Will randomly select one image from folder)
 
+Download
+------
+[Latest Version](https://github.com/antgiant/Multi-Monitor-Wallpaper-Changer/releases/)
+
 **Only for Windows 8 and above**
