@@ -161,7 +161,7 @@ namespace Wallpaper
             try
             {
                 var wallpaper = (IDesktopWallpaper)(new DesktopWallpaperClass());
-
+                Rect monitorRect = wallpaper.GetMonitorRECT(wallpaper.GetMonitorDevicePathAt(monitor));
                 wallpaper.SetWallpaper(wallpaper.GetMonitorDevicePathAt(monitor), file);
                 wallpaper.SetPosition(DesktopWallpaperPosition.Fill);
             }
