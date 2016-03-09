@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Wallpaper
@@ -68,10 +69,31 @@ namespace Wallpaper
                     //Assume argument was a wallpaper image
                     else
                     {
-                        //If specified file does not exist do nothing and exit.
+                        //If specified file does not exist and path is not a folder do nothing and exit.
                         if (File.Exists(args[i]))
                         {
                             file = args[i];
+                        }
+                        else if (Directory.Exists(args[i]))
+                        {
+                            var files = Directory.EnumerateFiles(args[i], "*.*")
+                                                .Where(s => s.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase)
+                                                            || s.EndsWith(".gif", StringComparison.OrdinalIgnoreCase)
+                                                            || s.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
+                                                            || s.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
+                                                            || s.EndsWith(".tif", StringComparison.OrdinalIgnoreCase)
+                                                            || s.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase)
+                                                            || s.EndsWith(".tiff", StringComparison.OrdinalIgnoreCase)
+                                                       );
+                            if (files.Count() > 0)
+                            {
+                                Random rand = new Random();
+                                file = files.ElementAt(rand.Next(0, files.Count()));
+                            }
+                            else
+                            {
+                                Environment.Exit(0);
+                            }
                         }
                         else
                         {
