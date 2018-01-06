@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
+using System.Drawing;
 
 namespace Wallpaper
 {
@@ -11,26 +13,27 @@ namespace Wallpaper
         {
             string file = "";
             uint monitor = uint.MaxValue;
+			Rectangle crop = new Rectangle();
+			Regex is_crop = new Regex(@"^([0-9]+,){3}([0-9]+)$", RegexOptions.IgnoreCase);
+			Regex is_number = new Regex(@"^[0-9,]{1,9}$", RegexOptions.IgnoreCase);
 
-            //Only evaluate 1 or two arguments
-            if (args.Length >= 1 && args.Length <= 2)
+			//Only evaluate 1 or two arguments
+			if (args.Length >= 1 && args.Length <= 3)
             {
                 for (int i = 0; i < args.Length; i++)
                 {
-                    //If argument is a number set wallpaper on only that monitor (Assumes less than 10,000 monitors.)
-                    if (args[i].Length < 5)
+                    //If argument is a number set wallpaper on only that monitor (Assumes less than 1,000,000,000 monitors.)
+                    if (is_crop.Match(args[i]).Success)
                     {
                         try
                         {
-                            //Subtract one so that passed in monitor number equals what windows displays
-                            monitor = Convert.ToUInt32(args[i]) - 1;
+							string[] arg_split = args[i].Split(',');
+							crop = new Rectangle(
+												Convert.ToInt32(arg_split[0]),	//x
+												Convert.ToInt32(arg_split[1]),	//y
+												Convert.ToInt32(arg_split[2]),	//width
+												Convert.ToInt32(arg_split[3]));	//height
 
-                            //If specified monitor number is greater than the current number of monitors do nothing and exit.
-                            var wallpaper = (IDesktopWallpaper)(new DesktopWallpaperClass());
-                            if (wallpaper.GetMonitorDevicePathCount() < monitor)
-                            {
-                                Environment.Exit(0);
-                            }
                         }
                         catch
                         {
@@ -38,8 +41,29 @@ namespace Wallpaper
                             Environment.Exit(0);
                         }
                     }
-                    //If argument is a URL download and set wallpaper to that. (Only use trusted URLs as this will download anything.)
-                    else if (args[i].Substring(0, 4).ToLower() == "http")
+					//If argument is a number set wallpaper on only that monitor (Assumes less than 1,000,000,000 monitors.)
+					else if (is_number.Match(args[i]).Success)
+					{
+						try
+						{
+							//Subtract one so that passed in monitor number equals what windows displays
+							monitor = Convert.ToUInt32(args[i]) - 1;
+
+							//If specified monitor number is greater than the current number of monitors do nothing and exit.
+							var wallpaper = (IDesktopWallpaper)(new DesktopWallpaperClass());
+							if (wallpaper.GetMonitorDevicePathCount() < monitor)
+							{
+								Environment.Exit(0);
+							}
+						}
+						catch
+						{
+							//If monitor number is invalid do nothing and exit.
+							Environment.Exit(0);
+						}
+					}
+					//If argument is a URL download and set wallpaper to that. (Only use trusted URLs as this will download anything.)
+					else if (args[i].Substring(0, 4).ToLower() == "http")
                     {
                         string path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\Wallpapers";
 
@@ -128,6 +152,15 @@ namespace Wallpaper
 
             if (!string.IsNullOrEmpty(file))
             {
+				//Crop image if crop data is provided
+				if (!crop.IsEmpty)
+				{
+					String crop_file = Path.GetDirectoryName(file) + "\\" + Path.GetFileNameWithoutExtension(file) + "_cropped" + Path.GetExtension(file);
+					Bitmap bmpImage = new Bitmap(file);
+					bmpImage.Clone(crop, bmpImage.PixelFormat).Save(crop_file);
+					file = crop_file;
+				}
+
                 if (monitor == uint.MaxValue)
                 {
                     SetAsWallPaper(file);
