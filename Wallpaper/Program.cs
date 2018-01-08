@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 
 namespace Wallpaper
 {
@@ -156,9 +158,26 @@ namespace Wallpaper
 				if (!crop.IsEmpty)
 				{
 					String crop_file = Path.GetDirectoryName(file) + "\\" + Path.GetFileNameWithoutExtension(file) + "_cropped" + Path.GetExtension(file);
-					Bitmap bmpImage = new Bitmap(file);
-					bmpImage.Clone(crop, bmpImage.PixelFormat).Save(crop_file);
-					file = crop_file;
+
+                    int width = crop.Width;
+                    int height = crop.Height;
+                    float scale = System.Math.Max((float)crop.Width / (float)Screen.PrimaryScreen.Bounds.Width, (float)crop.Height / (float)Screen.PrimaryScreen.Bounds.Height);
+                    if (scale > 1)
+                    {
+                        width = (int)(crop.Width / scale);
+                        height = (int)(crop.Height / scale);
+                    }
+                    try
+                    {
+                        Bitmap bmpImage = new Bitmap(file);
+                        ResizeImage(bmpImage.Clone(crop, bmpImage.PixelFormat), width, height).Save(crop_file);
+                    }
+                    catch
+                    {
+                        Environment.Exit(0);
+                    }
+
+                    file = crop_file;
 				}
 
                 if (monitor == uint.MaxValue)
@@ -202,6 +221,37 @@ namespace Wallpaper
             {
                 Environment.Exit(0);
             }
+        }
+        /// <summary>
+        /// Resize the image to the specified width and height. Source https://stackoverflow.com/questions/1922040/resize-an-image-c-sharp
+        /// </summary>
+        /// <param name="image">The image to resize.</param>
+        /// <param name="width">The width to resize to.</param>
+        /// <param name="height">The height to resize to.</param>
+        /// <returns>The resized image.</returns>
+        public static Bitmap ResizeImage(Image image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
         }
     }
 }
