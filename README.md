@@ -15,6 +15,11 @@ Usage
  * URL (http and https only)
   * Note: URL must end with an extension of a supported wallpaper format (i.e. bmp, gif, jpg, png, tiff)
  * Folder (Will randomly select one image from folder)
+* (optional) crop = x,y,w,h (Information to crop the image)
+ * x = x coordinate of starting point
+ * y = y coordinate of starting point
+ * w = width of cropped image
+ * h = height of cropped image
 
 Download
 ------
