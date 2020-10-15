@@ -129,6 +129,7 @@ namespace Wallpaper
 
                 if (url == "") {
                     file = bd.DownloadSync();
+                    url = "bing";
                 } else {
                     file = bd.DownloadSync(url);
                 }
@@ -169,13 +170,19 @@ namespace Wallpaper
             
                         Bitmap bmpImage = new Bitmap(file);
                         ResizeImage(bmpImage.Clone(crop, bmpImage.PixelFormat), width, height).Save(crop_file, jpgEncoder, myEncoderParameters);
+                        if (url != "") {
+                            bmpImage.Dispose();
+                            File.Delete(file);
+                            File.Move(crop_file, file);
+                        }
                     }
                     catch
                     {
                         Environment.Exit(0);
                     }
-                    
-                    file = crop_file;
+                    if (url == "") {
+                        file = crop_file;
+                    }
 				}
 
                 if (monitor == uint.MaxValue)
