@@ -86,7 +86,12 @@ namespace Wallpaper
                 {
                     Environment.Exit(0);
                 }
-                string localFile = Path.Combine(folder, Path.GetFileName(HttpUtility.ParseQueryString(new Uri(url).Query).Get("id")));
+                string localFile = "";
+                if (!String.IsNullOrEmpty(HttpUtility.ParseQueryString(new Uri(url).Query).Get("id"))) {
+                    localFile = Path.Combine(folder, Path.GetFileName(HttpUtility.ParseQueryString(new Uri(url).Query).Get("id")));
+                } else {
+                    localFile = Path.Combine(folder, Path.GetFileName(new Uri(url).LocalPath));
+                }
 				System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072		//TLS 1.2
 																  | (System.Net.SecurityProtocolType)768	//TLS 1.1
 																  | System.Net.SecurityProtocolType.Tls;
