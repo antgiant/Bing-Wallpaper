@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using System.Web;
 
 namespace Wallpaper
 {
@@ -85,7 +86,7 @@ namespace Wallpaper
                 {
                     Environment.Exit(0);
                 }
-                string localFile = Path.Combine(folder, Path.GetFileName(new Uri(url).LocalPath));
+                string localFile = Path.Combine(folder, Path.GetFileName(HttpUtility.ParseQueryString(new Uri(url).Query).Get("id")));
 				System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072		//TLS 1.2
 																  | (System.Net.SecurityProtocolType)768	//TLS 1.1
 																  | System.Net.SecurityProtocolType.Tls;
