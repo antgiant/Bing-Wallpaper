@@ -88,8 +88,7 @@ namespace Wallpaper
                 string localFile = Path.Combine(folder, Path.GetFileName(new Uri(url).LocalPath));
 				System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072		//TLS 1.2
 																  | (System.Net.SecurityProtocolType)768	//TLS 1.1
-																  | System.Net.SecurityProtocolType.Tls
-																  | System.Net.SecurityProtocolType.Ssl3;
+																  | System.Net.SecurityProtocolType.Tls;
 
 				var client = new WebClientEx(10 * 1000);
 				client.DownloadFile(url, localFile);
