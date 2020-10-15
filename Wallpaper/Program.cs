@@ -14,12 +14,13 @@ namespace Wallpaper
         private static void Main(string[] args)
         {
             string file = "";
+            string url = "";
             uint monitor = uint.MaxValue;
 			Rectangle crop = new Rectangle();
 			Regex is_crop = new Regex(@"^([0-9]+,){3}([0-9]+)$", RegexOptions.IgnoreCase);
 			Regex is_number = new Regex(@"^[0-9,]{1,9}$", RegexOptions.IgnoreCase);
 
-			//Only evaluate 1 or two arguments
+			//Only evaluate with correct number of arguments
 			if (args.Length >= 1 && args.Length <= 3)
             {
                 for (int i = 0; i < args.Length; i++)
@@ -67,30 +68,7 @@ namespace Wallpaper
 					//If argument is a URL download and set wallpaper to that. (Only use trusted URLs as this will download anything.)
 					else if (args[i].Substring(0, 4).ToLower() == "http")
                     {
-                        string path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\Wallpapers";
-
-                        if (!Directory.Exists(path))
-                            Directory.CreateDirectory(path);
-
-                        var bd =
-                            new Downloader(path)
-                            {
-                                UseHttps = true,
-                                Size =
-                                    new Rect
-                                    {
-                                        Right = Screen.PrimaryScreen.Bounds.Width,
-                                        Bottom = Screen.PrimaryScreen.Bounds.Height
-                                    }
-                            };
-
-                        file = bd.DownloadSync(args[i]);
-
-                        //If specified URL cannot be downloaded do nothing and exit.
-                        if (file == string.Empty)
-                        {
-                            Environment.Exit(0);
-                        }
+                        url = args[i];
                     }
                     //Assume argument was a wallpaper image
                     else
@@ -129,7 +107,7 @@ namespace Wallpaper
                 }
             }
 
-            //Default to Bing Wallpaper
+            //Download URL, but Default to Bing Wallpaper if none provided
             if (file == "")
             {
                 string path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\Wallpapers";
@@ -149,7 +127,11 @@ namespace Wallpaper
                             }
                     };
 
-                file = bd.DownloadSync();
+                if (url == "") {
+                    file = bd.DownloadSync();
+                } else {
+                    file = bd.DownloadSync(url);
+                }
             }
 
             if (!string.IsNullOrEmpty(file))
