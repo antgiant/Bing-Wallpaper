@@ -114,7 +114,12 @@ namespace Wallpaper
             //Download URL, but Default to Bing Wallpaper if none provided
             if (file == "")
             {
-                string path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\Wallpapers";
+                string path = "";
+                if (download_is_temporary) {
+                    path = Path.GetTempPath();
+                } else {
+                    path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\Wallpapers";
+                }
 
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
