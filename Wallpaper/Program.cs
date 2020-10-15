@@ -15,13 +15,14 @@ namespace Wallpaper
         {
             string file = "";
             string url = "";
+            bool download_is_temporary = false;
             uint monitor = uint.MaxValue;
 			Rectangle crop = new Rectangle();
 			Regex is_crop = new Regex(@"^([0-9]+,){3}([0-9]+)$", RegexOptions.IgnoreCase);
 			Regex is_number = new Regex(@"^[0-9,]{1,9}$", RegexOptions.IgnoreCase);
 
 			//Only evaluate with correct number of arguments
-			if (args.Length >= 1 && args.Length <= 3)
+			if (args.Length >= 1 && args.Length <= 4)
             {
                 for (int i = 0; i < args.Length; i++)
                 {
@@ -69,6 +70,9 @@ namespace Wallpaper
 					else if (args[i].Substring(0, 4).ToLower() == "http")
                     {
                         url = args[i];
+                    }
+                    else if (args[i].ToLower() == "download_is_temporary") {
+                        download_is_temporary = true;
                     }
                     //Assume argument was a wallpaper image
                     else
@@ -192,6 +196,9 @@ namespace Wallpaper
                 else
                 {
                     SetAsWallPaper(file, monitor);
+                }
+                if (download_is_temporary) {                    
+                    File.Delete(file);
                 }
             }
         }

@@ -21,6 +21,7 @@ Options
   * y = y coordinate of starting point
   * w = width of cropped image
   * h = height of cropped image
+* (optional) download_is_temporary allows for deleting image after download. Option is "download_is_temporary" without the quotes.
 
 Download
 ------

@@ -11,7 +11,7 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/Wallpaper/Bin/Debug/netcoreapp3.1/Wallpaper.exe",
 //            "args": ["2", "352,89,1348,758", "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/FD/GEOCOLOR/1808x1808.jpg"],
-            "args": ["2", "736,219,4489,2524", "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/FD/GEOCOLOR/5424x5424.jpg"],
+            "args": ["2", "736,219,4489,2524", "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/FD/GEOCOLOR/5424x5424.jpg", "download_is_temporary"],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false
