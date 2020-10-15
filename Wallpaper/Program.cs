@@ -187,14 +187,13 @@ namespace Wallpaper
             
                         Bitmap bmpImage = new Bitmap(file);
                         ResizeImage(bmpImage.Clone(crop, bmpImage.PixelFormat), width, height).Save(crop_file, jpgEncoder, myEncoderParameters);
-                        bmpImage.Dispose();
-                        File.Delete(file);
-                        File.Move(crop_file, file);
                     }
                     catch
                     {
                         Environment.Exit(0);
                     }
+                    
+                    file = crop_file;
 				}
 
                 if (monitor == uint.MaxValue)
