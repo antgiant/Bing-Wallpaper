@@ -202,7 +202,9 @@ namespace Wallpaper
                 {
                     SetAsWallPaper(file, monitor);
                 }
-                if (download_is_temporary) {                    
+                if (download_is_temporary) {
+                    //Wait 30 Seconds for windows to actually set the wallpaper before deleting the file.
+                    System.Threading.Thread.Sleep(30000);
                     File.Delete(file);
                 }
             }
