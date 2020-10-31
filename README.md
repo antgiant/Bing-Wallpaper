@@ -25,6 +25,6 @@ Options
 
 Download
 ------
-[Latest Version](https://github.com/antgiant/Multi-Monitor-Wallpaper-Changer/releases/)
+[Latest Version](https://github.com/antgiant/Multi-Monitor-Wallpaper-Changer/releases/latest)
 
 **Only for Windows 8 and above**
